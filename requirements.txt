@@ -1,0 +1,4 @@
+pandas
+openpyxl
+numpy
+pyinstaller  # 用于打包成单文件 exe（可选，打包时安装）
