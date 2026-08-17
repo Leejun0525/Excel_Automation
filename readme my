@@ -1,0 +1,61 @@
+Excel 自动清理工具（Windows 可打包为单文件可执行）
+
+概述
+- 这是一个 Python 原型程序，会对选中的 Excel (.xlsx/.xls) 文件进行常用清理：去除全空行、去除字符串前后空白、日期列标准化（YYYY-MM-DD）、去重、按首个有效列排序，并生成汇总与缺失值统计。程序会输出一个 *_cleaned.xlsx 文件和一个日志文件。
+
+交付方式
+- 已实现一个可直接用 Python 运行的 GUI 程序（app.py）。
+- 可以将其打包为单文件 Windows 可执行（.exe），这样朋友双击即可使用，无需安装 Python。
+
+依赖
+- Python 3.8+ 推荐
+- 依赖列表见 requirements.txt（pandas、openpyxl、numpy）。
+
+快速运行（开发机或有 Python 的机器）
+1. 创建虚拟环境（可选）：
+   python -m venv venv
+   venv\Scripts\activate
+2. 安装依赖：
+   pip install -r requirements.txt
+3. 运行程序：
+   python app.py
+
+使用说明（朋友端）
+- 双击运行 exe（如果已打包）或在安装好 Python 的情况下运行 app.py
+- 点击“选择文件”选择一个 Excel 文件，点击“开始处理选中文件”
+- 程序会在源文件同目录生成 一个 名为 <原名>_cleaned.xlsx 的文件 和 日志文件
+
+打包为单文件 exe（在 Windows 上）
+1. 安装打包工具：
+   pip install pyinstaller
+2. 生成单文件：
+   pyinstaller --onefile --windowed app.py
+   - 参数说明：
+     --onefile 把所有依赖打包到一个 exe
+     --windowed 运行时不弹出额外控制台（GUI 程序推荐）
+3. 打包完成后，生成的 exe 在 dist\app.exe（可重命名），拷贝给朋友即可双击使用
+
+注意事项
+- 打包后的 exe 体积可能较大（包含 pandas 等库）
+- Excel 宏 (.xlsm) 的方式也能实现“打开即用”，但会遇到启用宏的安全提示；本方案使用单文件 exe 可避免宏提示
+- 如果有特殊的清理规则（比如按某些特定列去重或生成特定格式的报表），请提供示例文件或具体规则，我会把规则加入处理流程并重新打包
+
+下一步建议（请选择其中一项）
+1) 现在把一个示例 Excel 发给我（或描述列和规则），我用真实数据做一次测试并把打包好的 exe 发回给你（或说明打包方法）；
+2) 需要我直接打包一个 exe（我会打包默认流程并提供下载/交付指引）；
+3) 先聊要增加或修改的具体规则（例如去重按哪几列、是否要保留某些列的原格式等）。
+
+联系与交付
+- 请选择上面的下一步，我会据此继续。
+
+打包与交付（自动化构建）
+- 已在仓库中添加了一个 GitHub Actions workflow (.github/workflows/build-windows.yml)。该 workflow 在 Windows runner 上运行 PyInstaller，生成单文件的 Windows 可执行文件（dist/Excel_Automation.exe），并把它作为 workflow artifact 上传。要生成 exe：
+  1. 把代码推到 main 分支或在仓库的 Actions -> workflows 手动触发 "Build Windows EXE"（workflow_dispatch）。
+  2. 等待 workflow 运行完成，打开对应 run 的页面，下载名为 "Excel_Automation-windows-exe" 的 artifact。
+  3. 下载并解压后，会得到 Excel_Automation.exe，双击即可在 Windows 上运行（无需 Python）。
+
+注意：
+- 由于 macOS 上无法可靠地交叉编译 Windows .exe，已采用 GitHub Actions 在 Windows runner 上构建，方便你自动生成可供朋友直接使用的 exe。
+- 如果需要我在构建中加入额外的资源文件、图标或指定 --windowed 模式（不弹控制台），可以告诉我，我会更新 workflow 并重新触发构建。
+
+如果确认要我立刻触发一次构建（并把构建结果的下载说明/链接提供给你），请回复“触发构建”。
